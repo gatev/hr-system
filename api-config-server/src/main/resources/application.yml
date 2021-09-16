@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: HRConfigServer
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/gatev/hr-configuration
+          username: hristo_6@mail.bg  
+          password: '{cipher}f4b9b05c3518ba19447d557b9e25ab734caec5b29105b25bc9efa8a651be969bbe7c2fca36c42001bfaf19a02c38a90d'
+          clone-on-start: true
+          default-label: main
+    
+server:
+  port: 7003

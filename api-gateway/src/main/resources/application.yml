@@ -1,0 +1,47 @@
+server:
+  port: 7002
+
+spring:
+  application:
+    name: api-gateway
+  config:
+    import:
+    - optional:configserver:http://localhost:7003
+  cloud:    gateway:
+      default-filters:
+      - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin  
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+                  routes:      - id: user-management-register
+        uri: lb://user-management
+        predicates:        - Path=/user/register
+        - Method=POST
+        filters:        - RemoveRequestHeader=Cookie
+        - RewritePath=/user/register ,/api/auth/signup
+        
+      - id: user-management-login
+        uri: lb://user-management        predicates:        - Path=/user/login
+        - Method=POST        filters:        - RemoveRequestHeader=Cookie
+        - RewritePath=/user/login ,/api/auth/signin
+        
+      - id: user-management-get
+        uri: lb://user-management
+        predicates:
+        - Path=/user/get
+        - Method=GET
+        - Header=Authorization, Bearer (.*)
+        filters:
+        - RemoveRequestHeader=Cookie
+        - RewritePath=/user/get ,/api/auth/test
+        - AuthorizationHeaderFilter
+        
+      
+    
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:7001/eureka

@@ -1,0 +1,37 @@
+server:
+  port: ${PORT:0}
+
+spring:
+  application:
+    name: user-management
+  devtools:
+    restart:
+      enabled: true  
+  datasource:
+    url: jdbc:mysql://localhost:3306/hr_system_m?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&useUnicode=true&characterEncoding=UTF-8    
+    username: root
+    password: '{cipher}2b63efa3331e1921c79848f50a1dbaa4ed5242a25324172a1b62145bab80ccb7'
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  sql:
+    init:
+      mode: always
+  config:
+    import:
+    - optional:configserver:http://localhost:7003
+        
+logging:
+  level:
+    '[org.hibernate.SQL]': DEBUG 
+        
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance-id:${random.value}}    
