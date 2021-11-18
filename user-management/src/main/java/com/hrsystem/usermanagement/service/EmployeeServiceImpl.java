@@ -30,9 +30,14 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee> implements Em
         return employeeRepository.findByEmail(email);
     }
 
+//    @Override
+//    public List<Employee> findByIdIn(List<Long> userIds) {
+//        return employeeRepository.findByIdIn(userIds);
+//    }
+    
     @Override
-    public List<Employee> findByIdIn(List<Long> userIds) {
-        return employeeRepository.findByIdIn(userIds);
+    public Optional<Employee> findById(Long id) {
+        return employeeRepository.findById(id);
     }
 
 	@Override

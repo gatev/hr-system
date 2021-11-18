@@ -16,27 +16,49 @@ spring:
             allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "*"
-                  routes:      - id: user-management-register
-        uri: lb://user-management
-        predicates:        - Path=/user/register
+                  routes:      - id: employees-management-register
+        uri: lb://employees-management
+        predicates:        - Path=/registration
         - Method=POST
         filters:        - RemoveRequestHeader=Cookie
-        - RewritePath=/user/register ,/api/auth/signup
+        - RewritePath=/register ,/api/auth/signup
         
-      - id: user-management-login
-        uri: lb://user-management        predicates:        - Path=/user/login
+      - id: employees-management-login
+        uri: lb://employees-management        predicates:        - Path=/login
         - Method=POST        filters:        - RemoveRequestHeader=Cookie
-        - RewritePath=/user/login ,/api/auth/signin
+        - RewritePath=/login ,/api/auth/signin
         
-      - id: user-management-get
-        uri: lb://user-management
+      - id: employees-management-get
+        uri: lb://employees-management
         predicates:
-        - Path=/user/get
+        - Path=/employees/get
         - Method=GET
         - Header=Authorization, Bearer (.*)
         filters:
         - RemoveRequestHeader=Cookie
-        - RewritePath=/user/get ,/api/auth/test
+        - RewritePath=/employees/get ,/api/auth/test
+        - AuthorizationHeaderFilter
+        
+      - id: employees-management-get-userById
+        uri: lb://employees-management
+        predicates:
+        - Path=/employees/get/**
+        - Method=GET
+        - Header=Authorization, Bearer (.*)
+        filters:
+        - RemoveRequestHeader=Cookie
+        - RewritePath=/employees/get/(?<segment>.*) ,/api/employees/$\{segment}
+        - AuthorizationHeaderFilter
+      
+      - id: holiday-management-test
+        uri: lb://holiday-management
+        predicates:
+        - Path=/holiday/test
+        - Method=GET
+        - Header=Authorization, Bearer (.*)
+        filters:
+        - RemoveRequestHeader=Cookie
+        - RewritePath=/holiday/test ,/api/holiday/test
         - AuthorizationHeaderFilter
         
       

@@ -1,6 +1,7 @@
 package com.hrsystem.usermanagement.security.jwt;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.hrsystem.usermanagement.security.service.UserDetailsImpl;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -30,9 +32,12 @@ public class JwtUtils {
         if (isRememberMe) {
         	jwtExpirationMs = jwtExpirationMs * 24 * 30; // 30 days
         }
+        
+        Claims claims = Jwts.claims().setSubject(userPrincipal.getEmail());
+        claims.put("roles", userPrincipal.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
 
         return Jwts.builder()
-                .setSubject((userPrincipal.getEmail()))
+                .setClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, this.secretKey)

@@ -15,5 +15,5 @@ public interface EmployeeRepository extends BaseRepository<Employee> {
 
     Optional<Employee> findByEmail(String email);
 //    Optional<Employee> findByUsernameOrEmail(String username, String email);
-    List<Employee> findByIdIn(List<Long> userIds);
+//    List<Employee> findByIdIn(List<Long> userIds);
 }

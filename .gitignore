@@ -29,3 +29,5 @@ user-management/src/main/resources/bootstrap.properties
 /hr-configuration
 /.metadata/
 /.metadata/
+
+.idea
