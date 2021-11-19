@@ -49,19 +49,39 @@ spring:
         - RemoveRequestHeader=Cookie
         - RewritePath=/employees/get/(?<segment>.*) ,/api/employees/$\{segment}
         - AuthorizationHeaderFilter
-      
-      - id: holiday-management-test
+        
+      - id: holiday-management-ask
         uri: lb://holiday-management
         predicates:
-        - Path=/holiday/test
+        - Path=/holidays/ask
+        - Method=POST
+        - Header=Authorization, Bearer (.*)
+        filters:
+        - RemoveRequestHeader=Cookie
+        - RewritePath=/holidays/ask ,/api/holidays/ask
+        - AuthorizationHeaderFilter
+        
+      - id: holiday-management-get-holidayByEmployeeId
+        uri: lb://holiday-management
+        predicates:
+        - Path=/holidays/get/**
         - Method=GET
         - Header=Authorization, Bearer (.*)
         filters:
         - RemoveRequestHeader=Cookie
-        - RewritePath=/holiday/test ,/api/holiday/test
-        - AuthorizationHeaderFilter
+        - RewritePath=/holidays/get/(?<segment>.*) ,/api/holidays/get/$\{segment}
+        - AuthorizationHeaderFilter  
         
-      
+      - id: holiday-management-getAll
+        uri: lb://holiday-management
+        predicates:
+        - Path=/holidays/all
+        - Method=GET
+        - Header=Authorization, Bearer (.*)
+        filters:
+        - RemoveRequestHeader=Cookie
+        - RewritePath=/holidays/all ,/api/holidays/all
+        - AuthorizationHeaderFilter  
     
 eureka:
   client:
