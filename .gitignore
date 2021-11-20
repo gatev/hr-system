@@ -31,3 +31,5 @@ user-management/src/main/resources/bootstrap.properties
 /.metadata/
 
 .idea
+
+hr-api.pem

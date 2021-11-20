@@ -23,7 +23,7 @@ public class EmployeeController {
 	@GetMapping("/{employeeId}")
 	public ResponseEntity<Object> getEmployeeById(@PathVariable Long employeeId) {
 		Optional<Employee> employee = employeeService.findById(employeeId);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(employee, HttpStatus.OK);
 	}
 
 }
