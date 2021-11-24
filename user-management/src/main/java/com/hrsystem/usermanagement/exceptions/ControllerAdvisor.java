@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -45,11 +46,24 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         ApiResponse apiResponse = new ApiResponse();
         ApiResponseError apiResponseError = new ApiResponseError();
         List<ApiResponseError> errors = new ArrayList<>();
-        apiResponseError.setField("Unauthorize error");
         apiResponseError.setMessage(ex.getMessage());
         errors.add(apiResponseError);
         apiResponse.setErrors(errors);
 
         return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
+    }
+    
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse> handleBadCredentialsException(
+    		AuthenticationException ex, WebRequest request) {
+
+        ApiResponse apiResponse = new ApiResponse();
+        ApiResponseError apiResponseError = new ApiResponseError();
+        List<ApiResponseError> errors = new ArrayList<>();
+        apiResponseError.setMessage(ex.getMessage());
+        errors.add(apiResponseError);
+        apiResponse.setErrors(errors);
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
 }
